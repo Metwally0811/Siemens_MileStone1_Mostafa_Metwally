@@ -11,19 +11,11 @@
 
 using namespace std;
 
-Ethernet_Packet::Ethernet_Packet(int ifg_size, int payload_size) {
+Ethernet_Packet::Ethernet_Packet(int ifg_size, ECPRI ECPRI_Packet) {
 	IFGSize = ifg_size;
-	Payload_Size = payload_size;
 	IFG = new unsigned char[IFGSize];  
-
-	Payload = new unsigned char[Payload_Size]; 
-
-
 	for (int i = 0; i < IFGSize; i++) {
 		IFG[i] = 0xff;
-	}
-	for (int i = 0; i < Payload_Size; i++) {
-		Payload[i] = 0x00;
 	}
 	for (int i = 0; i < 6; ++i) {
 		DestAddress[i] = 0;
@@ -31,8 +23,7 @@ Ethernet_Packet::Ethernet_Packet(int ifg_size, int payload_size) {
 	for (int i = 0; i < 6; ++i) {
 		SourceAddress[i] = 0;
 	}
-
-	
+	this->ECPRI_Packet = ECPRI_Packet;
 }
 
 void Ethernet_Packet::setDestAddress(unsigned char* DestAddress)
@@ -50,11 +41,11 @@ void Ethernet_Packet::setSourceAddress(unsigned char* SourceAddress)
 	}
 }
 
-void Ethernet_Packet::setPayload(unsigned char* Payload)
+void Ethernet_Packet::setPayload( ECPRI ECPRI_Packet)
 {
-	for (int i = 0; i < Payload_Size; i++) {
-		this->Payload[i] = Payload[i];
-	}
+	
+		this->ECPRI_Packet = ECPRI_Packet;
+	
 }
 
 void Ethernet_Packet::setIFG(unsigned char* IFG)
@@ -69,10 +60,7 @@ void Ethernet_Packet::setIFGSize(int IFGSize)
 	this->IFGSize = IFGSize;
 }
 
-void Ethernet_Packet::setPayloadSize(int Payload_Size)
-{
-	this->Payload_Size = Payload_Size;
-}
+
 
 unsigned char* Ethernet_Packet::getDestAddress()
 {
@@ -87,9 +75,9 @@ unsigned char* Ethernet_Packet::getSourceAddress()
 	
 }
 
-unsigned char* Ethernet_Packet::getPayload()
+ECPRI Ethernet_Packet::getPayload()
 {
-	return Payload;
+	return ECPRI_Packet;
 	
 }
 
@@ -104,11 +92,7 @@ int Ethernet_Packet::getIFGSize()
 	return IFGSize;
 }
 
-int Ethernet_Packet::getPayloadSize()
-{
-	return Payload_Size;
-	
-}
+
 const unsigned char* Ethernet_Packet::getPreamble()
 {
 	return preamble;
@@ -155,7 +139,7 @@ void Ethernet_Packet::print() {
 	cout << dec << "\n";
 	cout << "Ethernet_Packet.Payload = ";
 	for (int i = 0; i < 46; i++) {
-		cout << hex << (int)Payload[i] << " ";
+		cout << hex << 00 << " ";
 	}
 	cout << dec << "\n";
 	cout << "Ethernet_Packet.FCS = ";
@@ -222,16 +206,18 @@ int Ethernet_Packet::Burst_print(int key) {
 		Counter++;
 	}
 
-	for (int i = 0; i < Payload_Size; i++) {
-		if (Counter == 4)
-		{
-			cout << dec << "\n";
-			Counter = 0;
-		}
-		std::cout << std::hex << std::setw(2) << std::setfill('0') << (int)Payload[i];
-		Counter++;
 
-	}
+		for (int i = 0; i < 46; i++) {
+			if (Counter == 4)
+			{
+				cout << dec << "\n";
+				Counter = 0;
+			}
+			std::cout << std::hex << std::setw(2) << std::setfill('0') << 0;
+			Counter++;
+		}
+
+	
 
 	for (int i = 0; i < 4; i++) {
 		if (Counter == 4)
@@ -264,6 +250,7 @@ int Ethernet_Packet::Burst_print(int key) {
 		cout << dec << "\n";
 		Counter = 0;
 	}
+
 	return Counter;
 }
 
@@ -275,7 +262,6 @@ void Ethernet_Packet::calculateFCS()
 	data.insert(data.end(), begin(DestAddress), end(DestAddress));
 	data.insert(data.end(), begin(SourceAddress), end(SourceAddress));
 	data.insert(data.end(), begin(EtherType), end(EtherType));
-	data.insert(data.end(), Payload, Payload + Payload_Size);
 
 	uint32_t crc = 0xEDB88320;
 	for (int byte : data) {

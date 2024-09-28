@@ -3,6 +3,8 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include "ECPRI.h"
+
 using namespace std;
 class Ethernet_Packet
 {
@@ -21,8 +23,7 @@ Preamble: 0xfb555555555555
 	unsigned char DestAddress[6]; //6 bytes
 	unsigned char SourceAddress[6];// 6 bytes
 	const unsigned char EtherType[2] = { 0xAA, 0xAA };
-	unsigned char* Payload;
-	int Payload_Size;
+	ECPRI ECPRI_Packet;
 	unsigned char FCS[4] = { 0x77, 0x77, 0x77, 0x77 };
 	unsigned char* IFG ;
 	int IFGSize; 
@@ -31,19 +32,17 @@ public:
 
 
 	Ethernet_Packet() : DestAddress{ 0 }, SourceAddress{ 0 }, IFGSize(0) {}
-	Ethernet_Packet(int ifgSize, int payload_size);
+	Ethernet_Packet(int ifgSize,  ECPRI ECPRI_Payload);
 	void setDestAddress(unsigned char* DestAddress);
 	void setSourceAddress(unsigned char* SourceAddress);
-	void setPayload(unsigned char* Payload);
+	void setPayload( ECPRI ECPRI_Packet);
 	void setIFG(unsigned char* IFG);
 	void setIFGSize(int IFGSize);
-	void setPayloadSize(int Payload_Size);
 	unsigned char* getDestAddress();
 	unsigned char* getSourceAddress();
-	unsigned char* getPayload();
+	ECPRI getPayload();
 	unsigned char* getIFG();
 	int getIFGSize();
-	int getPayloadSize();
 	const unsigned char* getPreamble();
 	const unsigned char getSFD();
 	const unsigned char* getEtherType();

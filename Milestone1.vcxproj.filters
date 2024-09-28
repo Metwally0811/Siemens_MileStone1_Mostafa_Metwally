@@ -24,12 +24,30 @@
     <ClCompile Include="Ethernet_Packet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ECPRI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ORAN_Packet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ORAN.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ethernet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Ethernet_Packet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ECPRI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ORAN_Packet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ORAN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
